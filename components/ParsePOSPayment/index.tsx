@@ -15,7 +15,7 @@ import DigitButton from "./Digit-Button"
 import styles from "./parse-payment.module.css"
 import ReceiveInvoice from "./Receive-Invoice"
 import { useDisplayCurrency } from "../../lib/use-display-currency"
-import { Currency } from "../../lib/graphql/generated"
+// import { Currency } from "../../lib/graphql/generated"
 import { ParsedUrlQuery } from "querystring"
 import CurrencyInput, { formatValue } from "react-currency-input-field"
 
@@ -41,7 +41,7 @@ export enum AmountUnit {
   Fiat = "FIAT",
 }
 
-const defaultCurrencyMetadata: Currency = {
+const defaultCurrencyMetadata = {
   id: "CRC",
   flag: "🇺🇸",
   name: "US Dollar",
@@ -60,7 +60,7 @@ function ParsePayment({ defaultWalletCurrency, walletId, dispatch, state }: Prop
   const [valueInSats, setValueInSats] = React.useState(0)
   const [exchangeRateFormatted, setExchangeRateFormatted] = React.useState("$0")
   const [currentAmount, setCurrentAmount] = React.useState(state.currentAmount)
-  const [currencyMetadata, setCurrencyMetadata] = React.useState<Currency>(
+  const [currencyMetadata, setCurrencyMetadata] = React.useState<any>(
     defaultCurrencyMetadata,
   )
   const [numOfChanges, setNumOfChanges] = React.useState(0)

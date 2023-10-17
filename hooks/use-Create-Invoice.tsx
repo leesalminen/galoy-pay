@@ -19,6 +19,7 @@ gql`
       }
       invoice {
         paymentRequest
+        paymentHash
       }
     }
   }

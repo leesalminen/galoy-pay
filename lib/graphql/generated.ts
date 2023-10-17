@@ -967,7 +967,7 @@ export type LnInvoiceCreateOnBehalfOfRecipientMutationVariables = Exact<{
 }>;
 
 
-export type LnInvoiceCreateOnBehalfOfRecipientMutation = { readonly __typename: 'Mutation', readonly lnInvoiceCreateOnBehalfOfRecipient: { readonly __typename: 'LnInvoicePayload', readonly errors: ReadonlyArray<{ readonly __typename: 'InputError', readonly message: string } | { readonly __typename: 'PaymentError', readonly message: string }>, readonly invoice?: { readonly __typename: 'LnInvoice', readonly paymentRequest: string } | null } };
+export type LnInvoiceCreateOnBehalfOfRecipientMutation = { readonly __typename: 'Mutation', readonly lnInvoiceCreateOnBehalfOfRecipient: { readonly __typename: 'LnInvoicePayload', readonly errors: ReadonlyArray<{ readonly __typename: 'InputError', readonly message: string } | { readonly __typename: 'PaymentError', readonly message: string }>, readonly invoice?: { readonly __typename: 'LnInvoice', readonly paymentRequest: string, readonly paymentHash: string } | null } };
 
 export type PriceSubscriptionVariables = Exact<{
   amount: Scalars['SatAmount'];
@@ -1083,6 +1083,7 @@ export const LnInvoiceCreateOnBehalfOfRecipientDocument = gql`
     }
     invoice {
       paymentRequest
+      paymentHash
     }
   }
 }

@@ -173,7 +173,7 @@ const AppLayout = ({ children, username }: Props) => {
             </a>
           )}
           {os === "huawei" && (
-            <button style={{ width: 150 }} href={apkLink} block variant="outline-dark">
+            <button style={{ width: 150 }} onClick={() => {window.location.href = apkLink}}>
               Download APK
               <br /> for Android
             </button>

@@ -37,10 +37,17 @@ export async function GET(
       },
     })
 
-    const { base, offset } = data.realtimePrice.btcSatPrice
-    const priceRef = (base / 10 ** offset) / 100
-    const convertedCurrencyAmount = Math.round(Number(amount) / priceRef)
-    amountInMsats = convertedCurrencyAmount * 1000
+    if (data?.btcPriceList?.length) {
+      const btcPrice = data?.btcPriceList[data.btcPriceList.length - 1]
+      if(btcPrice && btcPrice.price) {
+        const { base, offset } = btcPrice.price
+        const priceRef = (base / 10 ** offset) / 100
+        const convertedCurrencyAmount = Math.round(Number(amount) / priceRef)
+        amountInMsats = convertedCurrencyAmount * 1000
+      }
+      
+    }
+
   } else if (amount && Number.isInteger(Number(amount))) {
     amountInMsats = Number(amount) * 1000
   }

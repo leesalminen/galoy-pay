@@ -1,6 +1,5 @@
 import { useRouter } from "next/router"
 import React from "react"
-import CurrencyDropdown from "../../components/Currency/currency-dropdown"
 
 const SetupPwa = () => {
   const router = useRouter()
@@ -66,18 +65,6 @@ const SetupPwa = () => {
             }
             placeholder="username"
             required
-          />
-          <label htmlFor="display" style={{ alignSelf: "flex-start" }}>
-            Enter your currency
-          </label>
-          <CurrencyDropdown
-            name="display"
-            style={{ height: "42px", width: "100%" }}
-            onSelectedDisplayCurrencyChange={(newDisplayCurrency) => {
-              if (newDisplayCurrency) {
-                setSelectedDisplayCurrency(newDisplayCurrency)
-              }
-            }}
           />
           <button>Submit</button>
         </form>

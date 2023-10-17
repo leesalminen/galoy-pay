@@ -9,7 +9,7 @@ import { gql, useQuery } from "@apollo/client"
 
 import { GRAPHQL_URL } from "../lib/config"
 import { useRouter } from "next/router"
-import CurrencyDropdown from "../components/Currency/currency-dropdown"
+// import CurrencyDropdown from "../components/Currency/currency-dropdown"
 
 const GET_NODE_STATS = gql`
   query nodeIds {
@@ -24,7 +24,7 @@ function Home() {
     ? `https://mempool.space/signet/lightning/node/`
     : `https://mempool.space/lightning/node/`
   const { loading, error, data } = useQuery(GET_NODE_STATS)
-  const [selectedDisplayCurrency, setSelectedDisplayCurrency] = React.useState(
+  const [selectedDisplayCurrency/*, setSelectedDisplayCurrency*/] = React.useState(
     localStorage.getItem("display") ?? "USD",
   )
 

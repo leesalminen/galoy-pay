@@ -25,18 +25,17 @@ const httpLink = new HttpLink({
 
 const wsLink = new WebSocketLink(
   new SubscriptionClient(GRAPHQL_WEBSOCKET_URL, {
-    retryAttempts: 12,
     connectionParams: {},
-    shouldRetry: (errOrCloseEvent) => {
-      console.warn({ errOrCloseEvent }, "entering shouldRetry function for websocket")
-      // TODO: understand how the backend is closing the connection
-      // for instance during a new version rollout or k8s upgrade
-      //
-      // in the meantime:
-      // returning true instead of the default 'Any non-`CloseEvent`'
-      // to force createClient to attempt a reconnection
-      return true
-    },
+    // shouldRetry: (errOrCloseEvent) => {
+    //   console.warn({ errOrCloseEvent }, "entering shouldRetry function for websocket")
+    //   // TODO: understand how the backend is closing the connection
+    //   // for instance during a new version rollout or k8s upgrade
+    //   //
+    //   // in the meantime:
+    //   // returning true instead of the default 'Any non-`CloseEvent`'
+    //   // to force createClient to attempt a reconnection
+    //   return true
+    // },
     // Voluntary not using: webSocketImpl: WebSocket
     // seems react native already have an implement of the websocket?
     //

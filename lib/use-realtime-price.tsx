@@ -1,7 +1,7 @@
 import { gql, SubscriptionResult } from "@apollo/client"
 import * as React from "react"
 import {
-  PriceSubcription,
+  PriceSubscription,
   usePriceSubscription,
   useBtcPriceListQuery,
 } from "../lib/graphql/generated"
@@ -47,7 +47,7 @@ gql`
 const useRealtimePrice = (
   currency: string,
   onSubscriptionDataCallback?: (
-    subscriptionData: SubscriptionResult<RealtimePriceWsSubscription, any>,
+    subscriptionData: SubscriptionResult<any>,
   ) => void,
 ) => {
   const priceRef = React.useRef<number>(0)
@@ -60,8 +60,8 @@ const useRealtimePrice = (
       amountCurrencyUnit: "BTCSAT",
       priceCurrencyUnit: "USDCENT",
     },
-    onData({ subscriptionData }) {
-      if (onSubscriptionDataCallback) onSubscriptionDataCallback(subscriptionData)
+    onData({ data }) {
+      if (onSubscriptionDataCallback) onSubscriptionDataCallback(data)
     },
   })
 
@@ -70,8 +70,10 @@ const useRealtimePrice = (
     onCompleted(initData) {
       if (initData?.btcPriceList?.length) {
         const btcPrice = initData?.btcPriceList[initData.btcPriceList.length - 1]
-        const { base, offset } = btcPrice.price
-        priceRef.current = (base / 10 ** offset) / 100
+        if(btcPrice && btcPrice.price) {
+          const { base, offset } = btcPrice.price
+          priceRef.current = (base / 10 ** offset) / 100
+        }
       }
     },
   })
@@ -86,9 +88,9 @@ const useRealtimePrice = (
   const conversions = React.useMemo(
     () => ({
       satsToCurrency: (sats: number, display: string, fractionDigits: number) => {
-        sats = (sats / 100_000_000)
+        const btcAmount = (sats / 100_000_000)
         const convertedCurrencyAmount =
-          fractionDigits === 2 ? (sats * priceRef.current) / 100 : sats * priceRef.current
+          fractionDigits === 2 ? (btcAmount * priceRef.current) / 100 : btcAmount * priceRef.current
         const formattedCurrency = formatCurrency({
           amountInMajorUnits: convertedCurrencyAmount,
           currency: display,

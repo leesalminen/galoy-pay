@@ -9,7 +9,6 @@ import PinToHomescreen from "../components/PinToHomescreen"
 import reducer, { ACTIONS } from "./_reducer"
 import styles from "./_user.module.css"
 import Head from "next/head"
-import CurrencyDropdown from "../components/Currency/currency-dropdown"
 import { gql } from "@apollo/client"
 import { useUserDefaultWalletIdQuery } from "../lib/graphql/generated"
 
@@ -110,36 +109,6 @@ function ReceivePayment() {
                   </button>
                 )}
                 <p className={styles.username}>{`Pay ${username}`}</p>
-                <div style={{ marginLeft: "12px", marginTop: "9px" }}>
-                  <CurrencyDropdown
-                    style={{
-                      border: "none",
-                      outline: "none",
-                      width: isIOS || isSafari ? "72px" : "56px",
-                      height: "42px",
-                      fontSize: "18px",
-                      backgroundColor: "white",
-                      textAlign: "center",
-                      verticalAlign: "middle",
-                    }}
-                    showOnlyFlag={true}
-                    onSelectedDisplayCurrencyChange={(newDisplayCurrency) => {
-                      localStorage.setItem("display", newDisplayCurrency)
-                      router.push(
-                        {
-                          query: { ...router.query, display: newDisplayCurrency },
-                        },
-                        undefined,
-                        { shallow: true },
-                      )
-                      setTimeout(() => {
-                        // hard reload to re-calculate currency
-                        // in a future PR we can manage state globally for selected display currency
-                        window.location.reload()
-                      }, 100)
-                    }}
-                  />
-                </div>
               </div>
               {/* {memo && <p className={styles.memo}>{`Memo: ${memo}`}</p>} */}
 

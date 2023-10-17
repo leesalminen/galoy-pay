@@ -192,12 +192,12 @@ function ReceiveInvoice({ recipientWalletCurrency, walletId, state, dispatch }: 
         invoice = invoiceData.invoice
       }
     }
-    if ("lnUsdInvoiceCreateOnBehalfOfRecipient" in data) {
-      const { lnUsdInvoiceCreateOnBehalfOfRecipient: invoiceData } = data
-      if (invoiceData.invoice) {
-        invoice = invoiceData.invoice
-      }
-    }
+    // if ("lnUsdInvoiceCreateOnBehalfOfRecipient" in data) {
+    //   const { lnUsdInvoiceCreateOnBehalfOfRecipient: invoiceData } = data
+    //   if (invoiceData.invoice) {
+    //     invoice = invoiceData.invoice
+    //   }
+    // }
   }
 
   const copyInvoice = () => {
