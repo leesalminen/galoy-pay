@@ -16,8 +16,6 @@ export async function GET(
   request: Request,
   { params }: { params: { username: string } },
 ) {
-  console.log(NOSTR_PUBKEY)
-
   const { searchParams } = new URL(request.url)
 
   const username = params.username

@@ -27,35 +27,37 @@ function receipt(props: Props) {
 
         <div className="d-flex justify-content-center">
           <table className="my-3 w-100">
-            <tr>
-              <td className="py-3 border-bottom">Beneficiary Name</td>
-              <td className="py-3 border-bottom">{props.username}</td>
-            </tr>
-            <tr>
-              <td className="py-3 border-bottom">Paid On</td>
-              <td className="py-3 border-bottom">
-                {formattedDate(new Date())} at <span>{formattedTime(new Date())}</span>
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td className="py-3 border-bottom">Beneficiary Name</td>
+                <td className="py-3 border-bottom">{props.username}</td>
+              </tr>
+              <tr>
+                <td className="py-3 border-bottom">Paid On</td>
+                <td className="py-3 border-bottom">
+                  {formattedDate(new Date())} at <span>{formattedTime(new Date())}</span>
+                </td>
+              </tr>
 
-            <tr>
-              <td className="py-5 border-bottom">
-                Transaction Reference <br /> (Invoice)
-              </td>
-              <td className="py-5 border-bottom">
-                <div className={styles.reference}>{props.paymentRequest}</div>
-              </td>
-            </tr>
+              <tr>
+                <td className="py-5 border-bottom">
+                  Transaction Reference <br /> (Invoice)
+                </td>
+                <td className="py-5 border-bottom">
+                  <div className={styles.reference}>{props.paymentRequest}</div>
+                </td>
+              </tr>
 
-            <tr>
-              <td className="py-3 border-bottom">Status</td>
-              <td className="py-3 border-bottom">Paid</td>
-            </tr>
+              <tr>
+                <td className="py-3 border-bottom">Status</td>
+                <td className="py-3 border-bottom">Paid</td>
+              </tr>
 
-            <tr>
-              <td className="py-3 border-bottom">Description</td>
-              <td className="py-3 border-bottom">{props.memo ? props.memo : "none"}</td>
-            </tr>
+              <tr>
+                <td className="py-3 border-bottom">Description</td>
+                <td className="py-3 border-bottom">{props.memo ? props.memo : "none"}</td>
+              </tr>
+            </tbody>
           </table>
         </div>
         <a

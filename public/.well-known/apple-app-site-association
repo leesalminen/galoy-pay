@@ -3,8 +3,17 @@
     "apps": [],
     "details": [
       {
-        "appID": "AYPCPV46WW.io.galoy.bitcoinbeach",
-        "paths": ["*"]
+        "appIDs": [ "QU8N6UZ5LD.app.bitcoinjungle.ios" ],
+        "components": [
+          {
+            "/": "/*",
+            "comment": "Matches any URL"
+          }
+        ]
+      },
+      {
+        "appID": "QU8N6UZ5LD.app.bitcoinjungle.ios",
+        "paths": [ "*" ]
       }
     ]
   }
