@@ -33,11 +33,7 @@ export const client = new ApolloClient({
 })
 
 gql`
-  query accountDefaultWallet($username: Username!, $walletCurrency: WalletCurrency!) {
-    accountDefaultWallet(username: $username, walletCurrency: $walletCurrency) {
-      __typename
-      id
-      walletCurrency
-    }
+  query userDefaultWalletId($username: Username!) {
+    recipientWalletId: userDefaultWalletId(username: $username)
   }
 `

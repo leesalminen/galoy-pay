@@ -3,10 +3,10 @@ import { NextResponse } from "next/server"
 import { URL_HOST_DOMAIN } from "../../../config/config"
 import { NOSTR_PUBKEY, PAY_SERVER } from "../../../lib/config"
 import {
-  AccountDefaultWalletDocument,
-  AccountDefaultWalletQuery,
-  RealtimePriceInitialDocument,
-  RealtimePriceInitialQuery,
+  UserDefaultWalletIdDocument,
+  UserDefaultWalletIdQuery,
+  BtcPriceListDocument,
+  BtcPriceListQuery,
 } from "../../../lib/graphql/generated"
 import { client } from "./graphql"
 
@@ -28,9 +28,9 @@ export async function GET(
   let amountInMsats: number | undefined
 
   if (amount && currency && currency !== "BTC") {
-    const { data } = await client.query<RealtimePriceInitialQuery>({
-      query: RealtimePriceInitialDocument,
-      variables: { currency },
+    const { data } = await client.query<BtcPriceListQuery>({
+      query: BtcPriceListDocument,
+      variables: { range: "ONE_DAY" },
       context: {
         "x-real-ip": request.headers.get("x-real-ip"),
         "x-forwarded-for": request.headers.get("x-forwarded-for"),
@@ -38,7 +38,7 @@ export async function GET(
     })
 
     const { base, offset } = data.realtimePrice.btcSatPrice
-    const priceRef = base / 10 ** offset
+    const priceRef = (base / 10 ** offset) / 100
     const convertedCurrencyAmount = Math.round(Number(amount) / priceRef)
     amountInMsats = convertedCurrencyAmount * 1000
   } else if (amount && Number.isInteger(Number(amount))) {
@@ -48,15 +48,15 @@ export async function GET(
   let walletId: string | null = null
 
   try {
-    const { data } = await client.query<AccountDefaultWalletQuery>({
-      query: AccountDefaultWalletDocument,
-      variables: { username, walletCurrency: "BTC" },
+    const { data } = await client.query<UserDefaultWalletIdQuery>({
+      query: UserDefaultWalletIdDocument,
+      variables: { username },
       context: {
         "x-real-ip": request.headers.get("x-real-ip"),
         "x-forwarded-for": request.headers.get("x-forwarded-for"),
       },
     })
-    walletId = data?.accountDefaultWallet?.id
+    walletId = data?.recipientWalletId
   } catch (err: unknown) {
     console.log(err)
   }

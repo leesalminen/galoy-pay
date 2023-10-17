@@ -22,7 +22,7 @@ function GenerateInvoice({
   currency: string
 }) {
   const { createInvoice, data, loading, errorsMessage, invoiceStatus, setInvoiceStatus } =
-    useCreateInvoice({ recipientWalletCurrency })
+    useCreateInvoice({})
   const timerIds = useRef<number[]>([])
   const router = useRouter()
   const { satsToUsd } = useSatPrice()
@@ -47,10 +47,8 @@ function GenerateInvoice({
 
     createInvoice({
       variables: {
-        input: {
-          recipientWalletId,
-          amount: amt,
-        },
+        walletId: recipientWalletId,
+        amount: amt,
       },
     })
     if (currency !== "SATS" || recipientWalletCurrency === "USD") {

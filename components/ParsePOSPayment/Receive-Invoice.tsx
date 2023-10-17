@@ -98,11 +98,7 @@ function ReceiveInvoice({ recipientWalletCurrency, walletId, state, dispatch }: 
     backgroundColor: minutes < 1 ? "rgb(255, 0, 0)" : "rgba(83, 111, 242, 1)",
   }
 
-  const { createInvoice, data, errorsMessage, loading, invoiceStatus } = useCreateInvoice(
-    {
-      recipientWalletCurrency,
-    },
-  )
+  const { createInvoice, data, errorsMessage, loading, invoiceStatus } = useCreateInvoice({})
 
   const paymentAmount = React.useMemo(() => {
     if (!router.query.sats || typeof router.query.sats !== "string") {
@@ -153,11 +149,9 @@ function ReceiveInvoice({ recipientWalletCurrency, walletId, state, dispatch }: 
 
     createInvoice({
       variables: {
-        input: {
-          recipientWalletId: walletId,
-          amount: Number(amt),
-          ...(memo ? { memo: memo.toString() } : {}),
-        },
+        walletId: walletId,
+        amount: Number(amt),
+        ...(memo ? { memo: memo.toString() } : {}),
       },
     })
   }, [

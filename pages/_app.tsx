@@ -31,7 +31,7 @@ export default function Layout({
         <link rel="icon" type="image/png" href="/APPLE-ICON.png" />
         <script
           async
-          src="https://www.googletagmanager.com/gtag/js?id=UA-181044262-1"
+          src="https://www.googletagmanager.com/gtag/js?id=G-MNDTLNBVY0"
         ></script>
         <script
           dangerouslySetInnerHTML={{
@@ -40,11 +40,11 @@ export default function Layout({
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'UA-181044262-1');
+      gtag('config', 'G-MNDTLNBVY0');
     `,
           }}
         />
-        <title>Blink Cash Register</title>
+        <title>Bitcoin Jungle Cash Register</title>
       </Head>
       <GraphQLProvider>
         <AppLayout username={username}>

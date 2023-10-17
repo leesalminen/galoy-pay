@@ -1,7 +1,7 @@
 import * as React from "react"
 
-const formatter = new Intl.NumberFormat("en-US", {
-  maximumFractionDigits: 2,
+const formatter = new Intl.NumberFormat("es-CR", {
+  maximumFractionDigits: 0,
 })
 
 const parseInputValue = (inputValue: string) => {

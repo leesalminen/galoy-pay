@@ -7,6 +7,8 @@ import { Image, OverlayTrigger, Tooltip } from "react-bootstrap"
 import { URL_HOST_DOMAIN } from "../../config/config"
 import styles from "./app-layout.module.css"
 
+import { getOS, playStoreLink, appStoreLink, apkLink } from "../../lib/download"
+
 type Props = {
   children: React.ReactPortal | React.ReactNode
   username: string | string[] | undefined
@@ -23,6 +25,8 @@ const AppLayout = ({ children, username }: Props) => {
 
   const cashRegisterLink = username ? `/${username}` : "#"
   const payCodeLink = username ? `/${username}/print?memo=${memo}` : "#"
+
+  const os = getOS()
 
   const copyToClipboard = () => {
     copy(lightningAddr)
@@ -55,7 +59,7 @@ const AppLayout = ({ children, username }: Props) => {
     <div className={`${openSideBar && styles.container_bg} ${styles.container}`}>
       <nav className={styles.nav_bar}>
         <button className={styles.nav_home} onClick={navigateHome}>
-          <Image src="/icons/blink-logo-icon.svg" alt="logo" width="50" height="50" />
+          <Image src="/BJLogo.png" alt="logo" width="50" height="50" />
         </button>
         <div onClick={() => setOpenSideBar(!openSideBar)} className={styles.hamburger}>
           <span className={`${openSideBar && styles.toggle}`}></span>
@@ -158,6 +162,34 @@ const AppLayout = ({ children, username }: Props) => {
               height={50}
             />
           </a>
+          {os === "android" && (
+            <a href={playStoreLink}>
+              <Image src="/google-play-badge.png" height="40px" rounded />
+            </a>
+          )}
+          {os === "ios" && (
+            <a href={appStoreLink}>
+              <Image src="/apple-app-store.png" height="40px" rounded />
+            </a>
+          )}
+          {os === "huawei" && (
+            <button style={{ width: 150 }} href={apkLink} block variant="outline-dark">
+              Download APK
+              <br /> for Android
+            </button>
+          )}
+          {os === undefined && (
+            <div>
+              <a href={appStoreLink}>
+                <Image src="/apple-app-store.png" height="45px" rounded />
+              </a>
+              &nbsp;
+              <a href={playStoreLink}>
+                <Image src="/google-play-badge.png" height="45px" rounded />
+              </a>
+            </div>
+          )}
+
         </div>
       </main>
     </div>

@@ -1,45 +1,45 @@
 import { gql, SubscriptionResult } from "@apollo/client"
 import * as React from "react"
 import {
-  RealtimePriceWsSubscription,
-  useRealtimePriceInitialQuery,
-  useRealtimePriceWsSubscription,
+  PriceSubcription,
+  usePriceSubscription,
+  useBtcPriceListQuery,
 } from "../lib/graphql/generated"
 import { useDisplayCurrency } from "../lib/use-display-currency"
 
 gql`
-  subscription realtimePriceWs($currency: DisplayCurrency!) {
-    realtimePrice(input: { currency: $currency }) {
+  subscription price(
+    $amount: SatAmount!
+    $amountCurrencyUnit: ExchangeCurrencyUnit!
+    $priceCurrencyUnit: ExchangeCurrencyUnit!
+  ) {
+    price(
+      input: {
+        amount: $amount
+        amountCurrencyUnit: $amountCurrencyUnit
+        priceCurrencyUnit: $priceCurrencyUnit
+      }
+    ) {
       errors {
         message
       }
-      realtimePrice {
-        timestamp
-        btcSatPrice {
-          base
-          offset
-        }
-        usdCentPrice {
-          base
-          offset
-        }
-        denominatorCurrency
+      price {
+        base
+        offset
+        currencyUnit
+        formattedAmount
       }
     }
   }
 
-  query realtimePriceInitial($currency: DisplayCurrency!) {
-    realtimePrice(currency: $currency) {
+  query btcPriceList($range: PriceGraphRange!) {
+    btcPriceList(range: $range) {
       timestamp
-      btcSatPrice {
+      price {
         base
         offset
+        currencyUnit
       }
-      usdCentPrice {
-        base
-        offset
-      }
-      denominatorCurrency
     }
   }
 `
@@ -54,19 +54,24 @@ const useRealtimePrice = (
   const { formatCurrency } = useDisplayCurrency()
   const hasLoaded = React.useRef<boolean>(false)
 
-  const { data } = useRealtimePriceWsSubscription({
-    variables: { currency },
-    onSubscriptionData({ subscriptionData }) {
+  const { loading, data, error } = usePriceSubscription({
+    variables: {
+      amount: 1,
+      amountCurrencyUnit: "BTCSAT",
+      priceCurrencyUnit: "USDCENT",
+    },
+    onData({ subscriptionData }) {
       if (onSubscriptionDataCallback) onSubscriptionDataCallback(subscriptionData)
     },
   })
 
-  const { data: initialData } = useRealtimePriceInitialQuery({
-    variables: { currency },
+  const { data: initialData } = useBtcPriceListQuery({
+    variables: { range: "ONE_DAY" },
     onCompleted(initData) {
-      if (initData?.realtimePrice?.btcSatPrice) {
-        const { base, offset } = initData.realtimePrice.btcSatPrice
-        priceRef.current = base / 10 ** offset
+      if (initData?.btcPriceList?.length) {
+        const btcPrice = initData?.btcPriceList[initData.btcPriceList.length - 1]
+        const { base, offset } = btcPrice.price
+        priceRef.current = (base / 10 ** offset) / 100
       }
     },
   })
@@ -81,6 +86,7 @@ const useRealtimePrice = (
   const conversions = React.useMemo(
     () => ({
       satsToCurrency: (sats: number, display: string, fractionDigits: number) => {
+        sats = (sats / 100_000_000)
         const convertedCurrencyAmount =
           fractionDigits === 2 ? (sats * priceRef.current) / 100 : sats * priceRef.current
         const formattedCurrency = formatCurrency({
@@ -97,7 +103,7 @@ const useRealtimePrice = (
         const convertedCurrencyAmount =
           fractionDigits === 2
             ? (100 * currency) / priceRef.current
-            : currency / priceRef.current
+            : (currency / priceRef.current) * 100_000_000
         const formattedCurrency = formatCurrency({
           amountInMajorUnits: convertedCurrencyAmount,
           currency: display,
@@ -113,9 +119,9 @@ const useRealtimePrice = (
     [priceRef, formatCurrency],
   )
 
-  if (data?.realtimePrice?.realtimePrice?.btcSatPrice) {
-    const { base, offset } = data.realtimePrice.realtimePrice.btcSatPrice
-    priceRef.current = base / 10 ** offset
+  if (data?.price?.price) {
+    const { base, offset } = data.price.price
+    priceRef.current = ( (base / 10 ** offset) / 100 ) * 100_000_000
   }
 
   if (priceRef.current === 0) {

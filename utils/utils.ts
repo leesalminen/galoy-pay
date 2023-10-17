@@ -1,12 +1,12 @@
 import { ParsedUrlQuery } from "querystring"
 
-export const usdFormatter = new Intl.NumberFormat("en-US", {
+export const usdFormatter = new Intl.NumberFormat("es-CR", {
   // style: "currency",
   // currency: "USD",
   maximumFractionDigits: 0,
 })
 
-export const satsFormatter = new Intl.NumberFormat("en-US", {
+export const satsFormatter = new Intl.NumberFormat("es-CR", {
   maximumFractionDigits: 0,
 })
 
@@ -24,7 +24,7 @@ export function parseQueryAmount(query: ParsedUrlQuery) {
 
   return {
     amount: Number(query.amount) || 0,
-    currency: currency?.toUpperCase() || "USD",
+    currency: currency?.toUpperCase() || "CRC",
   }
 }
 
@@ -32,7 +32,7 @@ export function parseDisplayCurrency(query: ParsedUrlQuery) {
   const display = query.display as string | null
 
   return {
-    display: display ?? localStorage.getItem("display") ?? "USD",
+    display: "CRC",
   }
 }
 

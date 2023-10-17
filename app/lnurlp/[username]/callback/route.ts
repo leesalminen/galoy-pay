@@ -8,8 +8,8 @@ import Redis from "ioredis"
 import { URL_HOST_DOMAIN } from "../../../../config/config"
 import { NOSTR_PUBKEY } from "../../../../lib/config"
 import {
-  AccountDefaultWalletDocument,
-  AccountDefaultWalletQuery,
+  UserDefaultWalletIdDocument,
+  UserDefaultWalletIdQuery,
   LnInvoiceCreateOnBehalfOfRecipientDocument,
   LnInvoiceCreateOnBehalfOfRecipientMutation,
 } from "../../../../lib/graphql/generated"
@@ -94,15 +94,15 @@ export async function GET(
   let walletId: string | null = null
 
   try {
-    const { data } = await client.query<AccountDefaultWalletQuery>({
-      query: AccountDefaultWalletDocument,
-      variables: { username, walletCurrency: "BTC" },
+    const { data } = await client.query<UserDefaultWalletIdQuery>({
+      query: UserDefaultWalletIdDocument,
+      variables: { username },
       context: {
         "x-real-ip": request.headers.get("x-real-ip"),
         "x-forwarded-for": request.headers.get("x-forwarded-for"),
       },
     })
-    walletId = data?.accountDefaultWallet?.id
+    walletId = data?.recipientWalletId
   } catch (err: unknown) {
     console.log(err)
   }
@@ -151,7 +151,7 @@ export async function GET(
     })
 
     const errors = result.errors
-    const invoice = result.data?.mutationData?.invoice
+    const invoice = result.data?.lnInvoiceCreateOnBehalfOfRecipient?.invoice
 
     if ((errors && errors.length) || !invoice) {
       console.log("error getting invoice", errors)

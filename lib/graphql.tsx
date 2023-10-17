@@ -12,7 +12,10 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions"
 import { RetryLink } from "@apollo/client/link/retry"
 import { onError } from "@apollo/client/link/error"
 
-import { createClient } from "graphql-ws"
+import { WebSocketLink } from "@apollo/client/link/ws"
+import { SubscriptionClient } from "subscriptions-transport-ws"
+
+// import { createClient } from "graphql-ws"
 
 import { GRAPHQL_URL, GRAPHQL_WEBSOCKET_URL } from "./config"
 
@@ -20,9 +23,8 @@ const httpLink = new HttpLink({
   uri: GRAPHQL_URL,
 })
 
-const wsLink = new GraphQLWsLink(
-  createClient({
-    url: GRAPHQL_WEBSOCKET_URL,
+const wsLink = new WebSocketLink(
+  new SubscriptionClient(GRAPHQL_WEBSOCKET_URL, {
     retryAttempts: 12,
     connectionParams: {},
     shouldRetry: (errOrCloseEvent) => {

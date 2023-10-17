@@ -11,15 +11,11 @@ import styles from "./_user.module.css"
 import Head from "next/head"
 import CurrencyDropdown from "../components/Currency/currency-dropdown"
 import { gql } from "@apollo/client"
-import { useAccountDefaultWalletsQuery } from "../lib/graphql/generated"
+import { useUserDefaultWalletIdQuery } from "../lib/graphql/generated"
 
 gql`
-  query accountDefaultWallets($username: Username!) {
-    accountDefaultWallet(username: $username) {
-      __typename
-      id
-      walletCurrency
-    }
+  query userDefaultWalletId($username: Username!) {
+    recipientWalletId: userDefaultWalletId(username: $username)
   }
 `
 
@@ -50,7 +46,7 @@ function ReceivePayment() {
     manifestParams.set("memo", memo.toString())
   }
 
-  const { data, error: usernameError } = useAccountDefaultWalletsQuery({
+  const { data, error: usernameError } = useUserDefaultWalletIdQuery({
     variables: { username: accountUsername },
     skip: !accountUsername,
   })
@@ -58,21 +54,21 @@ function ReceivePayment() {
   const [state, dispatch] = React.useReducer(reducer, {
     currentAmount: "",
     createdInvoice: false,
-    walletCurrency: data?.accountDefaultWallet.walletCurrency || "USD",
+    walletCurrency: /*data?.accountDefaultWallet.walletCurrency ||*/ "USD",
     username: accountUsername,
     pinnedToHomeScreenModalVisible: false,
   })
 
-  React.useEffect(() => {
-    if (state.walletCurrency === data?.accountDefaultWallet.walletCurrency) {
-      return
-    }
-    dispatch({
-      type: ACTIONS.UPDATE_WALLET_CURRENCY,
-      payload: data?.accountDefaultWallet.walletCurrency,
-    })
-    dispatch({ type: ACTIONS.UPDATE_USERNAME, payload: username })
-  }, [state, username, data])
+  // React.useEffect(() => {
+  //   if (state.walletCurrency === data?.accountDefaultWallet.walletCurrency) {
+  //     return
+  //   }
+  //   dispatch({
+  //     type: ACTIONS.UPDATE_WALLET_CURRENCY,
+  //     payload: data?.accountDefaultWallet.walletCurrency,
+  //   })
+  //   dispatch({ type: ACTIONS.UPDATE_USERNAME, payload: username })
+  // }, [state, username, data])
 
   return (
     <>
@@ -150,8 +146,8 @@ function ReceivePayment() {
               <ParsePayment
                 state={state}
                 dispatch={dispatch}
-                defaultWalletCurrency={data?.accountDefaultWallet.walletCurrency}
-                walletId={data?.accountDefaultWallet.id}
+                defaultWalletCurrency={"BTC"}
+                walletId={data?.recipientWalletId}
               />
             </>
           )}

@@ -2,68 +2,36 @@ import { useState } from "react"
 
 import { gql } from "@apollo/client"
 import {
-  useLnInvoiceCreateOnBehalfOfRecipientsMutation,
-  useLnUsdInvoiceCreateOnBehalfOfRecipientMutation,
+  useLnInvoiceCreateOnBehalfOfRecipientMutation,
 } from "../lib/graphql/generated"
 
 interface Props {
-  recipientWalletCurrency: string | undefined
+
 }
 
 gql`
-  mutation lnUsdInvoiceCreateOnBehalfOfRecipient(
-    $input: LnUsdInvoiceCreateOnBehalfOfRecipientInput!
-  ) {
-    lnUsdInvoiceCreateOnBehalfOfRecipient(input: $input) {
+ mutation lnInvoiceCreateOnBehalfOfRecipient($walletId: WalletId!, $amount: SatAmount!, $memo: Memo) {
+    lnInvoiceCreateOnBehalfOfRecipient(
+      input: { recipientWalletId: $walletId, amount: $amount, memo: $memo }
+    ) {
       errors {
-        __typename
         message
       }
       invoice {
-        __typename
-        paymentHash
         paymentRequest
-        paymentSecret
-        satoshis
       }
-      __typename
-    }
-  }
-
-  mutation lnInvoiceCreateOnBehalfOfRecipients(
-    $input: LnInvoiceCreateOnBehalfOfRecipientInput!
-  ) {
-    lnInvoiceCreateOnBehalfOfRecipient(input: $input) {
-      errors {
-        __typename
-        message
-      }
-      invoice {
-        __typename
-        paymentHash
-        paymentRequest
-        paymentSecret
-        satoshis
-      }
-      __typename
     }
   }
 `
-const useCreateInvoice = ({ recipientWalletCurrency }: Props) => {
+const useCreateInvoice = ({ }: Props) => {
   const [invoiceStatus, setInvoiceStatus] = useState<
     "loading" | "new" | "need-update" | "expired"
   >("loading")
 
-  const usdMutation = useLnUsdInvoiceCreateOnBehalfOfRecipientMutation({
+  const mutation = useLnInvoiceCreateOnBehalfOfRecipientMutation({
     onError: console.error,
     onCompleted: () => setInvoiceStatus("new"),
   })
-  const btcMutation = useLnInvoiceCreateOnBehalfOfRecipientsMutation({
-    onError: console.error,
-    onCompleted: () => setInvoiceStatus("new"),
-  })
-
-  const mutation = recipientWalletCurrency === "USD" ? usdMutation : btcMutation
 
   const [createInvoice, { loading, error, data }] = mutation
 

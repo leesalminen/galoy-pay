@@ -35,11 +35,11 @@ export async function getServerSideProps({
   // Note: add the port to the webURL for local development
   const webURL = `${url.protocol}//${url.hostname}/${username}`
 
-  const qrCodeURL = (webURL + "?lightning=" + lnurl).toUpperCase()
+  // const qrCodeURL = (webURL + "?lightning=" + lnurl).toUpperCase()
 
   return {
     props: {
-      qrCodeURL,
+      qrCodeURL: lnurl.toUpperCase(),
       username,
       userHeader: `Pay ${username}@${URL_HOST_DOMAIN}`,
     },

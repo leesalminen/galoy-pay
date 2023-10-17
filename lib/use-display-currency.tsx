@@ -1,24 +1,24 @@
 import { gql } from "@apollo/client"
-import { useCurrencyListQuery } from "./graphql/generated"
+// import { useCurrencyListQuery } from "./graphql/generated"
 import { useCallback, useMemo } from "react"
 
-gql`
-  query currencyList {
-    currencyList {
-      __typename
-      id
-      flag
-      name
-      symbol
-      fractionDigits
-    }
-  }
-`
+// gql`
+//   query currencyList {
+//     currencyList {
+//       __typename
+//       id
+//       flag
+//       name
+//       symbol
+//       fractionDigits
+//     }
+//   }
+// `
 
 const usdDisplayCurrency = {
-  symbol: "$",
+  symbol: "₡",
   id: "USD",
-  fractionDigits: 2,
+  fractionDigits: 0,
 }
 
 const defaultDisplayCurrency = usdDisplayCurrency
@@ -38,7 +38,7 @@ const formatCurrencyHelper = ({
 }) => {
   const isNegative = Number(amountInMajorUnits) < 0
   const decimalPlaces = withDecimals ? fractionDigits : 0
-  const amountStr = Intl.NumberFormat("en-US", {
+  const amountStr = Intl.NumberFormat("es-CR", {
     minimumFractionDigits: decimalPlaces,
     maximumFractionDigits: decimalPlaces,
     // FIXME this workaround of using .format and not .formatNumber is
@@ -48,15 +48,15 @@ const formatCurrencyHelper = ({
 }
 
 export const useDisplayCurrency = () => {
-  const { data: dataCurrencyList } = useCurrencyListQuery({})
+  // const { data: dataCurrencyList } = useCurrencyListQuery({})
 
-  const displayCurrencyDictionary = useMemo(() => {
-    const currencyList = dataCurrencyList?.currencyList || []
-    return currencyList.reduce((acc, currency) => {
-      acc[currency.id] = currency
-      return acc
-    }, {} as Record<string, typeof defaultDisplayCurrency>)
-  }, [dataCurrencyList?.currencyList])
+  // const displayCurrencyDictionary = useMemo(() => {
+  //   const currencyList = dataCurrencyList?.currencyList || []
+  //   return currencyList.reduce((acc, currency) => {
+  //     acc[currency.id] = currency
+  //     return acc
+  //   }, {} as Record<string, typeof defaultDisplayCurrency>)
+  // }, [dataCurrencyList?.currencyList])
 
   const formatCurrency = useCallback(
     ({
@@ -68,9 +68,9 @@ export const useDisplayCurrency = () => {
       currency: string
       withSign?: boolean
     }) => {
-      const currencyInfo = displayCurrencyDictionary[currency] || {
+      const currencyInfo = /*displayCurrencyDictionary[currency] ||*/ {
         symbol: currency,
-        fractionDigits: 2,
+        fractionDigits: 0,
       }
       return formatCurrencyHelper({
         amountInMajorUnits,
@@ -79,11 +79,11 @@ export const useDisplayCurrency = () => {
         withSign,
       })
     },
-    [displayCurrencyDictionary],
+    [/*displayCurrencyDictionary*/],
   )
 
   return {
     formatCurrency,
-    currencyList: dataCurrencyList?.currencyList || [],
+    currencyList: /*dataCurrencyList?.currencyList ||*/ [],
   }
 }

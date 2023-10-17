@@ -42,11 +42,11 @@ export enum AmountUnit {
 }
 
 const defaultCurrencyMetadata: Currency = {
-  id: "USD",
+  id: "CRC",
   flag: "🇺🇸",
   name: "US Dollar",
-  symbol: "$",
-  fractionDigits: 2,
+  symbol: "₡",
+  fractionDigits: 0,
   __typename: "Currency",
 }
 
@@ -55,7 +55,7 @@ function ParsePayment({ defaultWalletCurrency, walletId, dispatch, state }: Prop
   const { username, amount, sats, unit, memo, currency } = router.query
   const { display } = parseDisplayCurrency(router.query)
   const { currencyToSats, satsToCurrency, hasLoaded } = useRealtimePrice(display)
-  const { currencyList } = useDisplayCurrency()
+  // const { currencyList } = useDisplayCurrency()
   const [valueInFiat, setValueInFiat] = React.useState(0)
   const [valueInSats, setValueInSats] = React.useState(0)
   const [exchangeRateFormatted, setExchangeRateFormatted] = React.useState("$0")
@@ -89,7 +89,7 @@ function ParsePayment({ defaultWalletCurrency, walletId, dispatch, state }: Prop
     const initialUnit = unit ?? "CENT" // TODO: eventually depreciate CENT for Fiat, but don't want to break existing POS links
     const initialAmount = safeAmount(amount).toString()
     const initialSats = safeAmount(sats).toString()
-    const initialDisplay = display ?? localStorage.getItem("display") ?? "USD"
+    const initialDisplay = display ?? localStorage.getItem("display") ?? "CRC"
     const initialUsername = router.query.username
     const initialQuery = { ...router.query }
     delete initialQuery?.currency
@@ -186,7 +186,7 @@ function ParsePayment({ defaultWalletCurrency, walletId, dispatch, state }: Prop
     if (isNaN(Number(amt))) return
     const formattedValue = formatValue({
       value: amt,
-      intlConfig: { locale: navigator.language, currency: display },
+      intlConfig: { locale: 'es-CR', currency: display },
     })
     localStorage.setItem("formattedFiatValue", formattedValue)
     setValueInFiat(amt)
@@ -257,12 +257,12 @@ function ParsePayment({ defaultWalletCurrency, walletId, dispatch, state }: Prop
   }, [unit])
 
   // Update CurrencyMetadata
-  React.useEffect(() => {
-    const latestCurrencyMetadata = currencyList?.find((c) => c.id === display)
-    if (latestCurrencyMetadata) {
-      setCurrencyMetadata(latestCurrencyMetadata)
-    }
-  }, [display, currencyList])
+  // React.useEffect(() => {
+  //   const latestCurrencyMetadata = currencyList?.find((c) => c.id === display)
+  //   if (latestCurrencyMetadata) {
+  //     setCurrencyMetadata(latestCurrencyMetadata)
+  //   }
+  // }, [display, currencyList])
 
   // Update Current Amount From Params
   React.useEffect(() => {
@@ -317,7 +317,7 @@ function ParsePayment({ defaultWalletCurrency, walletId, dispatch, state }: Prop
               fontWeight: 600,
             }}
             value={!amount ? 0 : valueInFiat}
-            intlConfig={{ locale: navigator.language, currency: display }}
+            intlConfig={{ locale: 'es-CR', currency: display }}
             readOnly={true}
           />
         </div>
@@ -351,7 +351,7 @@ function ParsePayment({ defaultWalletCurrency, walletId, dispatch, state }: Prop
       </div>
 
       <div className={styles.output}>
-        <span style={{ paddingTop: "1rem", fontSize: ".75rem" }}>
+        <span style={{ paddingTop: "0.1rem", fontSize: ".75rem" }}>
           {exchangeRateFormatted} / BTC
         </span>
       </div>

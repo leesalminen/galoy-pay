@@ -8,13 +8,13 @@ import useSatPrice from "../lib/use-sat-price"
 import GenerateInvoice from "./generate-invoice"
 import { parseDisplayCurrency } from "../utils/utils"
 
-const usdFormatter = new Intl.NumberFormat("en-US", {
+const usdFormatter = new Intl.NumberFormat("es-CR", {
   style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 2,
+  currency: "CRC",
+  maximumFractionDigits: 0,
 })
 
-const satsFormatter = new Intl.NumberFormat("en-US", {
+const satsFormatter = new Intl.NumberFormat("es-CR", {
   maximumFractionDigits: 0,
 })
 
