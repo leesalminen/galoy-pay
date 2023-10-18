@@ -964,6 +964,7 @@ export type LnInvoiceCreateOnBehalfOfRecipientMutationVariables = Exact<{
   walletId: Scalars['WalletId'];
   amount: Scalars['SatAmount'];
   memo?: InputMaybe<Scalars['Memo']>;
+  descriptionHash?: InputMaybe<Scalars['Hex32Bytes']>;
 }>;
 
 
@@ -1074,9 +1075,9 @@ export type LnNoAmountInvoiceCreateOnBehalfOfRecipientMutationHookResult = Retur
 export type LnNoAmountInvoiceCreateOnBehalfOfRecipientMutationResult = Apollo.MutationResult<LnNoAmountInvoiceCreateOnBehalfOfRecipientMutation>;
 export type LnNoAmountInvoiceCreateOnBehalfOfRecipientMutationOptions = Apollo.BaseMutationOptions<LnNoAmountInvoiceCreateOnBehalfOfRecipientMutation, LnNoAmountInvoiceCreateOnBehalfOfRecipientMutationVariables>;
 export const LnInvoiceCreateOnBehalfOfRecipientDocument = gql`
-    mutation lnInvoiceCreateOnBehalfOfRecipient($walletId: WalletId!, $amount: SatAmount!, $memo: Memo) {
+    mutation lnInvoiceCreateOnBehalfOfRecipient($walletId: WalletId!, $amount: SatAmount!, $memo: Memo, $descriptionHash: Hex32Bytes) {
   lnInvoiceCreateOnBehalfOfRecipient(
-    input: {recipientWalletId: $walletId, amount: $amount, memo: $memo}
+    input: {recipientWalletId: $walletId, amount: $amount, memo: $memo, descriptionHash: $descriptionHash}
   ) {
     errors {
       message
@@ -1106,6 +1107,7 @@ export type LnInvoiceCreateOnBehalfOfRecipientMutationFn = Apollo.MutationFuncti
  *      walletId: // value for 'walletId'
  *      amount: // value for 'amount'
  *      memo: // value for 'memo'
+ *      descriptionHash: // value for 'descriptionHash'
  *   },
  * });
  */

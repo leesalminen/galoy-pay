@@ -10,9 +10,9 @@ interface Props {
 }
 
 gql`
- mutation lnInvoiceCreateOnBehalfOfRecipient($walletId: WalletId!, $amount: SatAmount!, $memo: Memo) {
+ mutation lnInvoiceCreateOnBehalfOfRecipient($walletId: WalletId!, $amount: SatAmount!, $memo: Memo, $descriptionHash: Hex32Bytes) {
     lnInvoiceCreateOnBehalfOfRecipient(
-      input: { recipientWalletId: $walletId, amount: $amount, memo: $memo }
+      input: { recipientWalletId: $walletId, amount: $amount, memo: $memo, descriptionHash: $descriptionHash }
     ) {
       errors {
         message
