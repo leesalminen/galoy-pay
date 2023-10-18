@@ -25,7 +25,7 @@ export async function getServerSideProps({
     "lnurl",
     bech32.toWords(
       Buffer.from(
-        `${url.protocol}//${url.hostname}/.well-known/lnurlp/${username}`,
+        `https://pay.bitcoinjungle.app/.well-known/lnurlp/${username}`,
         "utf8",
       ),
     ),
