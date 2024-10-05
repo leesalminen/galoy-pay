@@ -20,12 +20,14 @@ gql`
     $walletId: WalletId!
     $amount: SatAmount!
     $descriptionHash: Hex32Bytes!
+    $memo: Memo
   ) {
     mutationData: lnInvoiceCreateOnBehalfOfRecipient(
       input: {
         recipientWalletId: $walletId
         amount: $amount
         descriptionHash: $descriptionHash
+        memo: $memo
       }
     ) {
       errors {
@@ -82,6 +84,7 @@ export async function GET(
   // this is part of the lnurl spec
   const amount = searchParams.get("amount")
   const nostr = searchParams.get("nostr")
+  const comment = searchParams.get("comment")
 
   if (!amount || !username) {
     return NextResponse.json({
@@ -132,21 +135,25 @@ export async function GET(
       })
     }
 
-    let descriptionHash: string
+    let mutationVariables: {[k: string]: any} = {
+      walletId,
+      amount: amountSats,
+      descriptionHash: null,
+      memo: null,
+    }
+
 
     if (nostrEnabled && nostr) {
-      descriptionHash = crypto.createHash("sha256").update(nostr).digest("hex")
+      mutationVariables.descriptionHash = crypto.createHash("sha256").update(nostr).digest("hex")
+    } else if (comment) {
+      mutationVariables.memo = comment
     } else {
-      descriptionHash = crypto.createHash("sha256").update(metadata).digest("hex")
+      mutationVariables.descriptionHash = crypto.createHash("sha256").update(metadata).digest("hex")
     }
 
     const result = await client.mutate<LnInvoiceCreateOnBehalfOfRecipientMutation>({
       mutation: LnInvoiceCreateOnBehalfOfRecipientDocument,
-      variables: {
-        walletId,
-        amount: amountSats,
-        descriptionHash,
-      },
+      variables: mutationVariables,
     })
 
     const errors = result.errors
