@@ -135,7 +135,7 @@ export async function GET(
       })
     }
 
-    let mutationVariables: {[k: string]: any} = {
+    const mutationVariables: {[k: string]: any} = {
       walletId,
       amount: amountSats,
       descriptionHash: null,
