@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import originalUrl from "original-url"
 import {
   ApolloClient,
   ApolloLink,
@@ -9,7 +8,7 @@ import {
   InMemoryCache,
 } from "@apollo/client"
 
-import { GRAPHQL_URL_INTERNAL } from "../../../../lib/config"
+import { GRAPHQL_URL_INTERNAL, PAY_SERVER } from "../../../../lib/config"
 
 const ipForwardingMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => ({
@@ -85,15 +84,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         reason: "Invalid card ID parameter"
       })
     }
-
-    // Get the base URL from the request
-    const url = originalUrl(req)
-    const baseUrl = `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ""}`
     
     // Determine if this is a withdraw request or callback based on parameters
     if (p && c && !pr) {
       // This is a withdraw request
-      return handleWithdrawRequest(req, res, id, p, c, baseUrl)
+      return handleWithdrawRequest(req, res, id, p, c, PAY_SERVER)
     } else if (pr) {
       // This is a callback with a payment request
       return handleWithdrawCallback(req, res, pr)
