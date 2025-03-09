@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import originalUrl from "original-url"
 import {
   ApolloClient,
   ApolloLink,
@@ -9,7 +8,7 @@ import {
   InMemoryCache,
 } from "@apollo/client"
 
-import { GRAPHQL_URL_INTERNAL } from "../../../lib/config"
+import { GRAPHQL_URL_INTERNAL, PAY_SERVER } from "../../../lib/config"
 
 const ipForwardingMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => ({
@@ -75,10 +74,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     }
 
-    // Get the base URL from the request
-    const url = originalUrl(req)
-    const baseUrl = `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ""}`
-    
+    const baseUrl = PAY_SERVER
+
     console.log("Pairing Bolt card with:", { otp, baseUrl, graphqlUri: GRAPHQL_URL_INTERNAL })
     
     try {
